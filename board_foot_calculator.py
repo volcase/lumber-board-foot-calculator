@@ -36,12 +36,14 @@ def read_records(path: str) -> list[Record]:
 def main() -> None:
     parser = argparse.ArgumentParser(description='Lumber board-foot calculator')
     parser.add_argument('--file', required=True, help='CSV with Dimension and Price')
+    parser.add_argument('--summary', action='store_true', help='Print only totals')
     args = parser.parse_args()
     recs = read_records(args.file)
     total_bf = sum(r.board_feet for r in recs)
     total_cost = sum(r.price for r in recs)
-    for r in recs:
-        print(f"{r.dimension}: {r.board_feet:.2f} bf @ ${r.cost_per_bf:.2f}/bf")
+    if not args.summary:
+        for r in recs:
+            print(f"{r.dimension}: {r.board_feet:.2f} bf @ ${r.cost_per_bf:.2f}/bf")
     print(f"Total board-feet: {total_bf:.2f}")
     print(f"Total cost: ${total_cost:.2f}")
 
