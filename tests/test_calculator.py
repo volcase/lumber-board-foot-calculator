@@ -24,6 +24,18 @@ class CalculatorTests(unittest.TestCase):
             )
             self.assertIn('Total board-feet: 10.67', result)
 
+    def test_cli_summary(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            csv_path = Path(tmpdir) / 'load.csv'
+            csv_path.write_text('Dimension,Price\n2x4x16,6.0\n')
+            result = subprocess.check_output(
+                [sys.executable, 'board_foot_calculator.py', '--file', str(csv_path), '--summary'],
+                text=True,
+            )
+            self.assertIn('Total board-feet: 10.67', result)
+            self.assertIn('Total cost: $6.00', result)
+            self.assertNotIn('2x4x16', result)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
